@@ -50,54 +50,54 @@ function app(){
 
             return gitAPIs[obj.url]
         };
- 
+        var template = [
+             '<img class="avatar" src="<%= avatar_url %>">' ,
+             '<div class="name"> <%= login %> </div>' ,
+             '<hr>' ,
+             '<div> joined: <%= created_at %> </div>' ,
+        ].join('');
+        var repoTemplate = '<div class="repo"> <%=name%> </div>';
+
         var getUser =  function(userName) {            
 
-            var userURL = getPath({url:'user_url' , user:userName})
-            var formatTime = function(date , formatter){
-                // I'm not going to do a parseing... but here is a few use cases
-                var date = new Date(date);
-                var format = {
-                    'hhmmss' : [date.getHours(), date.getMinutes(), date.getSeconds()].join(':') ,
-                    'mmddyy' : [date.getMonth()+1 , date.getDate() , date.getFullYear()].join('/')
+            var userURL = getPath({url:'user_url' , user:userName}) ,
+                formatTime = function(date , formatter){
+
+                    // I'm not going to do a parseing... but here is a few use cases
+                    var date = new Date(date) ,
+                        format = {
+                            'hhmmss' : [date.getHours(), date.getMinutes(), date.getSeconds()].join(':') ,
+                            'mmddyy' : [date.getMonth()+1 , date.getDate() , date.getFullYear()].join('/')
+                        };
+
+                    return format[formatter];
                 };
-                return format[formatter];
 
-            }
-            // console.log(userURL)
-
-            $.getJSON(userURL ).then(function(userInfo){
-                var userContainer = $('#userInfo');
-                userContainer.html('')//reset
-                $('<img>')
-                    .appendTo(userContainer)
-                    .attr({src: userInfo.avatar_url , 'class':'avatar'})
-                    .css({width:'100px'});      // this wasn't working in the css...
-
-                userContainer.append('<div>' + userInfo.login + '</div>')
-                             .append('<hr>')
-                             .append('joined ' + formatTime(userInfo.created_at , 'mmddyy'))
-
+            $.getJSON(userURL ).then(function(userInfo) {
                 $.getJSON(userInfo.repos_url).then(function(repoList) {
-                    $('#repoList').html('Users Repositories')//reset
-                    var repos = repoList.map(function(repo , i) {    // cash my list for later.
+                    
+                    // reformat date
+                    userInfo.created_at = formatTime(userInfo.created_at , 'mmddyy');
+                    
+                    $('#userInfo').html( _.template(template , userInfo) );
                         
-                        var repo = $('<div>' + repo.name + '</div>').appendTo('#repoList').attr('class','repo');
-                        
-                        i % 2===0 && repo.css({background:'#fff'});
-                        
-                        return repo;
+                    $('#repoList').html('Users Repositories' + repoList.map(function(repo) {
+                        return _.template(repoTemplate , repo);
+                    }).join(''));
+
+                    $('.repo').each(function(i) {
+                        i % 2===0 && $(this).css({background:'#fff'});
                     });
 
                 });
-
             });
-        }
+
+        };
 
         $('.user').click(function(){
 
             getUser(this.name)
-        })
+        });
 
     });
 
@@ -120,3 +120,18 @@ function app(){
 
 
 
+                        // repoList.forEach(function(repo , i) {    // cash my list for later.
+                            
+                        //     var repo = $('<div>' + repo.name + '</div>').appendTo('#repoList').attr('class','repo');
+                            
+                        //     i % 2===0 && repo.css({background:'#fff'});
+                        // });
+
+                    // $('<img>')
+                    //     .appendTo(userContainer)
+                    //     .attr({src: userInfo.avatar_url , 'class':'avatar'})
+                    //     // .css({width:'100px'});      // this wasn't working in the css...
+
+                    // userContainer.append('<div>' + userInfo.login + '</div>')
+                    //              .append('<hr>')
+                    //              .append('joined ' + formatTime(userInfo.created_at , 'mmddyy'))

@@ -847,13 +847,13 @@ abbr[title]:hover {
  * GENERAL
  */
 img {
-  max-width: 100; }
+  max-width: 100%; }
 
 body {
   -webkit-transition: opacity .25s ease;
           transition: opacity .25s ease; }
   body .avatar {
-    width: '50px'; }
+    width: 50px !important; }
   body .repo {
     padding-left: 20px;
     background: #eee;
