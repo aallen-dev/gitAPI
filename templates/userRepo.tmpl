@@ -1,1 +1,16 @@
-<div class="repo"> <%=name%> </div>
+<div class="repo" id="container-<%= name %>">
+	
+	<div>
+		<a href="#<%= full_name %>"= class="link"  id="expandRepo-<%= name %>">
+			<%= name %>
+		</a>
+	    <%= (has_pages ? '<a href="' + gh_pages_url + '" class="ghPages">Open in GH-Pages</a>' : '') %>
+		</div>
+	<div class="branches" id="branches-<%= name %>">
+		<!-- <div class="openBranches link">
+			branches
+		</div> -->
+		<div class="repo_List" id="list-<%= name %>"></div>
+	</div>
+
+</div>

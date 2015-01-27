@@ -47,8 +47,15 @@
 img {max-width:100%;}
 
 body {
+    font-family: arial;
+    font-size: 12px;
     transition: opacity .25s ease;
+    color:#69b;
     
+    h3{
+        color:inherit;
+    }
+
     .avatar{
         width:50px !important;
     }
@@ -58,19 +65,83 @@ body {
         background: #eee;
         border-top:1px solid #ccc;
     }
+    .ghPages{
+        float:right;
+        margin-right:10px;
+        color:#9ce
+    }
+    .ghPages:visited{
+        color:#47a
+    }
+    .ghPages::after{
+        content:'';
+        clear:both;
+    }
+    .right {
+        position:relative;
+        margin-left:20%;
+
+    }
+    header{
+        margin:20px
+    }
+    .users{
+        
+        width:80%;
+        // margin-top: 50px;
+        margin-bottom: 50px;
+
+    }
+    .branchLink{
+        // position:relative;
+        // display:  block;
+        color:#9ce
+    }
+    .branchLink:visited{
+        // position:relative;
+        // display:  block;
+        color:#47a
+    }
+    a{
+        text-decoration: none;
+        color:inherit;
+    }
+    a:visited{
+        text-decoration: none;
+        color:inherit;
+    }
+    .user{
+        width: 18%;
+        margin:5px;
+        font-size:15px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 3px 3px 5px #bef;
+        border:1px solid #9ce;
+        background-color:#adf;
+        display:none;
+    }
+    .link{
+        cursor:pointer;
+        // color:#666;
+    }
     #userInfo{
         width:20%;
         position:absolute;
         padding: 20px;
-        border:1px solid red
+        // border:1px solid red
     }
     #repoList{
-        margin-top:100px;
-        position:relative;
-        margin-left:20%;
         border-radius: 10px;
         border:1px solid #ccc;
-        overflow: hidden
+        overflow: hidden;
+        margin-right: 10px;
+    }
+    @media only screen and (max-width: 780px){
+
+        .user{
+            width: 30%;
+        }
     }
 
 }

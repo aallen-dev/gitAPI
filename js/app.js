@@ -11,7 +11,8 @@ function app(){
         //js
         {url: "./bower_components/jquery/dist/jquery.min.js"},
         {url: "./bower_components/lodash/dist/lodash.min.js"},
-        {url: "./js/GithubClient.js"}
+        {url: "./js/GithubClient.js"} ,
+        {url: "./js/router.js"}
         // {url: "./bower_components/backbone/backbone.js"}
     ).then(function(){
         document.querySelector("html").style.opacity = 1;
@@ -22,19 +23,30 @@ function app(){
                 
                 userTemplate = p1[0] ,
                 repoTemplate = p2[0];
-                
                 // now create our objects
-                $('.user').each(function(){
+                ["aallen-dev","Jrharper0592","cjros","pmarsh41","bmagnantb","firehawk09","dorshinho","arbolkiri","kawill","maprules1000"]
+                
+                .forEach(function(name){
+                    $('<a href="#' + name + '" >' + name + '</a>')
+                        .appendTo('.users')
+                        .attr({'name':name , class:'user' , id:'userButton-' + name});
+                });
 
+                $('.user').each(function(){
                     Users[this.name] = new User(this)
                     Users[this.name].init();
                 });
-// alert(2)
-                // Users['aallen-dev'].display()//} , 1000)
+                
+                // load default if nothing is in the hash
+                if(!location.hash.substr(1).split('/')[0])
+                    Users['aallen-dev'].onload(function() {
+                        this.display();
+                    });
+
+                addEventListener('hashchange' , Router.route )
+                Router.route()
 
             });
-
-
     });
 
 };
@@ -48,26 +60,3 @@ function app(){
 
 
 
-
-
-
-
-
-
-
-
-                        // repoList.forEach(function(repo , i) {    // cash my list for later.
-                            
-                        //     var repo = $('<div>' + repo.name + '</div>').appendTo('#repoList').attr('class','repo');
-                            
-                        //     i % 2===0 && repo.css({background:'#fff'});
-                        // });
-
-                    // $('<img>')
-                    //     .appendTo(userContainer)
-                    //     .attr({src: userInfo.avatar_url , 'class':'avatar'})
-                    //     // .css({width:'100px'});      // this wasn't working in the css...
-
-                    // userContainer.append('<div>' + userInfo.login + '</div>')
-                    //              .append('<hr>')
-                    //              .append('joined ' + formatTime(userInfo.created_at , 'mmddyy'))
