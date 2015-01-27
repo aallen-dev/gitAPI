@@ -38,10 +38,8 @@ function app(){
                 });
                 
                 // load default if nothing is in the hash
-                if(!location.hash.substr(1).split('/')[0])
-                    Users['aallen-dev'].onload(function() {
-                        this.display();
-                    });
+                if(!location.hash.substr(1).split('/')[0] || !Users[location.hash.substr(1).split('/')[0]])
+                    Router.route('aallen-dev');
 
                 addEventListener('hashchange' , Router.route )
                 Router.route()

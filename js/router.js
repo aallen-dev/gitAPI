@@ -1,7 +1,7 @@
 
                 var Router = {
                     
-                    route : function() {
+                    route : function(fallback) {
 
                         var hashArray = location.hash.substr(1).split('/');
 
@@ -47,6 +47,8 @@
                                 Users[hashArray[0]].onload(showNeeded);
                             }
                         }
+                        fallback && 
+                            (hashArray=[fallback], Users[hashArray[0]].onload(showNeeded));
 
 
                     }
