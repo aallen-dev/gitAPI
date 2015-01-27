@@ -47,9 +47,9 @@
                                 Users[hashArray[0]].onload(showNeeded);
                             }
                         }
-                        fallback && 
-                            (hashArray=[fallback], Users[hashArray[0]].onload(showNeeded));
 
+                        typeof fallback == 'string' &&
+                            (hashArray=[fallback], Users[hashArray[0]].onload(showNeeded));
 
                     }
 
