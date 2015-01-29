@@ -1,56 +1,98 @@
 
-                var Router = {
-                    
-                    route : function(fallback) {
+var Router = {
+    
+    route : function(fallback) {
+        "use strict";
+        var hashArray    = location.hash.substr(1).split('/') ,
+            CurrentUser  = Users[hashArray[0]] ,
+            selectedRepo = hashArray[1] ,
+            showSub = function() {
+                // a repo has been selected by logging to the url's second hash argument
 
-                        var hashArray = location.hash.substr(1).split('/');
+                $('#list-' + selectedRepo).show();
 
-                        var showSub = function() {console.log('hi')
+                $('#container-' + selectedRepo).css({background:'#dfe'});
+            } ,
+            showUser = function(){
 
-                            Users[hashArray[0]].getBranches(hashArray[1])
+                CurrentUser.display();
 
-                            $('#container-' + hashArray[1]).css({background:'#dfe'});
-                        }
-                        var showUser = function(){
-                            Users[hashArray[0]].display();
+                // a user has been selected by logging to the url's first hash argument
+                // go through each repo for this user 
+                CurrentUser.repos.forEach(function(repo) {
 
-                            $('.repo').each(function(i) {
-                                i % 2===0 && $(this).css({background:'#fff'});
-                            });
-                            $('.user').css({
-                                background:'#adf' ,
-                                'box-shadow': '3px 3px 5px #bef' ,
-                                border:'1px solid #9ce'
-                            });
-                            $('#userButton-' + hashArray[0]).css({
-                                background:'#dfe',
-                                'box-shadow': '2px 2px 5px #cfd' ,
-                                border:'1px solid #9ce'
-                            });
+                    var writeBranches = function() {
 
-                        }
-                        var showNeeded = function() { // split them into 2 units, just cuz I know how much you like your "unit tests" =P
-                                    
-                            showUser();
+                        if (!repo.branchHTML.length)
+                            repo.branchHTML = 'no branches pushed';
+                        
+                        $('#list-' + repo.name).html(repo.branchHTML);
 
-                            hashArray[1] && showSub();
+                        repo.branchHTML == 'no branches pushed' &&
+                            $('#container-' + repo.name ).addClass('red');
                             
-                        }
+                    };
+                    var cacheBranches = function(branches) {
+                        
+                        repo.branchHTML = branches.map(function(branch) {
+                            return _.template(CurrentUser.templates[2] , {fullName:(repo.full_name||'') , name:(branch.name||'')});
+                        }).join('');
 
-                        if(hashArray[0] && Users[hashArray[0]]) {
-
-                            if(Users[hashArray[0]].ready){
-                                showNeeded();
-                            }
-
-                            else {console.log('load ' + hashArray[0] + 'when ready')
-                                Users[hashArray[0]].onload(showNeeded);
-                            }
-                        }
-
-                        typeof fallback == 'string' &&
-                            (hashArray=[fallback], Users[hashArray[0]].onload(showNeeded));
-
+                        writeBranches()
                     }
 
-                };
+                    // if repo.branchHTML is cached don't pull from server
+                    if (!repo.branchHTML) {
+                        // when the first branch tree is uncollapsed cache all branch listings for this repo
+                        $.get(repo.branches_url.replace(/{.*}/,'')+CurrentUser.token)
+                            .then(cacheBranches);
+                    }
+                    else
+                        writeBranches();
+
+                });
+
+                $('.repo_List').hide();
+
+                $('.repo').each(function(i) {
+                    i % 2===0 && $(this).addClass('highlighted');
+                });
+                $('.user').removeClass('selected')
+                $('#userButton-' + hashArray[0]).addClass('selected')
+
+            } ,
+            showNeeded = function() { // split them into 2 units, just cuz I know how much you like your "unit tests" =P
+                        
+                showUser();
+
+                selectedRepo && showSub();
+                
+            };
+
+        if(hashArray[0] && CurrentUser) {
+
+            if(CurrentUser.ready)
+                showNeeded();
+
+            else// {console.log('load ' + hashArray[0] + 'when ready')
+                CurrentUser.onload(showNeeded);
+
+        }
+        if (!CurrentUser) {
+            $('#repoList').html('&nbsp;&nbsp;user '+ hashArray[0] + ' not found')
+            $('#userInfo').html('')
+            return
+        }
+
+        typeof fallback == 'string' &&
+            (hashArray=[fallback], CurrentUser.onload(showNeeded));
+
+    }
+
+};
+
+
+
+
+
+

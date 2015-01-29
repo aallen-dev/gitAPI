@@ -16,33 +16,31 @@ function app(){
         // {url: "./bower_components/backbone/backbone.js"}
     ).then(function(){
         document.querySelector("html").style.opacity = 1;
-        // start app?
+        
         // only get the templates once when we load the page.
-        $.when($.get('./templates/userInfo.tmpl') , $.get('./templates/userRepo.tmpl'))
-            .then(function(p1 , p2){
+        $.when($.get('./templates/userInfo.tmpl') ,
+               $.get('./templates/userRepo.tmpl') ,
+               $.get('./templates/branches.tmpl'))
+            .then(function(p1 , p2 ,p3) {
                 
-                userTemplate = p1[0] ,
-                repoTemplate = p2[0];
                 // now create our objects
-                ["aallen-dev","Jrharper0592","cjros","pmarsh41","bmagnantb","firehawk09","dorshinho","arbolkiri","kawill","maprules1000"]
-                
-                .forEach(function(name){
-                    $('<a href="#' + name + '" >' + name + '</a>')
-                        .appendTo('.users')
-                        .attr({'name':name , class:'user' , id:'userButton-' + name});
-                });
+                ["aallen-dev","Jrharper0592","cjros","pmarsh41","bmagnantb","firehawk09","dorshinho","arbolkiri","kawill","maprules1000",'matthiasak','TIY-Houston-Front-End-Engineering']
+                    .forEach(function(name) {
 
-                $('.user').each(function(){
-                    Users[this.name] = new User(this)
-                    Users[this.name].init();
-                });
-                
+                        Users[name] = new User(name);
+
+                        Users[name].addTemplate(p1[0])
+                                   .addTemplate(p2[0])
+                                   .addTemplate(p3[0])
+                                   .init();
+                    });
+
                 // load default if nothing is in the hash
                 if(!location.hash.substr(1).split('/')[0] || !Users[location.hash.substr(1).split('/')[0]])
                     Router.route('aallen-dev');
 
-                addEventListener('hashchange' , Router.route )
-                Router.route()
+                addEventListener('hashchange' , Router.route );
+                Router.route();
 
             });
     });
