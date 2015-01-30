@@ -931,7 +931,6 @@ body {
     margin-right: 10px; }
   body .expand {
     -webkit-transition: all .5s ease-in;
-    border: 1px solid red;
     display: block; }
   body .red {
     color: #f00 !important; }

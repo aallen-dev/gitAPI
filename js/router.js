@@ -19,38 +19,7 @@ var Router = {
 
                 // a user has been selected by logging to the url's first hash argument
                 // go through each repo for this user 
-                CurrentUser.repos.forEach(function(repo) {
-
-                    var writeBranches = function() {
-
-                        if (!repo.branchHTML.length)
-                            repo.branchHTML = 'no branches pushed';
-                        
-                        $('#list-' + repo.name).html(repo.branchHTML);
-
-                        repo.branchHTML == 'no branches pushed' &&
-                            $('#container-' + repo.name ).addClass('red');
-                            
-                    };
-                    var cacheBranches = function(branches) {
-                        
-                        repo.branchHTML = branches.map(function(branch) {
-                            return _.template(CurrentUser.templates[2] , {fullName:(repo.full_name||'') , name:(branch.name||'')});
-                        }).join('');
-
-                        writeBranches()
-                    }
-
-                    // if repo.branchHTML is cached don't pull from server
-                    if (!repo.branchHTML) {
-                        // when the first branch tree is uncollapsed cache all branch listings for this repo
-                        $.get(repo.branches_url.replace(/{.*}/,'')+CurrentUser.token)
-                            .then(cacheBranches);
-                    }
-                    else
-                        writeBranches();
-
-                });
+                CurrentUser.getBranches();
 
                 $('.repo_List').hide();
 

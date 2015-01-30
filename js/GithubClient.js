@@ -96,7 +96,41 @@ var Users = {} ,
         if(this.ready)
             return [this.info , this.repos].concat(this.templates)//$.when(this.getUserInfo(), this.getReposInfo(), this.getTemplate1(), this.getTemplate2())
     };
+    User.prototype.getBranches = function() {//alert(this.repos)
+        var self = this;
+        this.repos.forEach(function(repo) {
 
+                    var writeBranches = function() {
+
+                        if (!repo.branchHTML.length)
+                            repo.branchHTML = 'no branches pushed';
+                        
+                        $('#list-' + repo.name).html(repo.branchHTML);
+
+                        repo.branchHTML == 'no branches pushed' &&
+                            $('#container-' + repo.name ).addClass('red');
+                            
+                    };
+                    var cacheBranches = function(branches) {
+                        
+                        repo.branchHTML = branches.map(function(branch) {
+                            return _.template(self.templates[2] , {fullName:(repo.full_name||'') , name:(branch.name||'')});
+                        }).join('');
+
+                        writeBranches() 
+                    }
+
+                    // if repo.branchHTML is cached don't pull from server
+                    if (!repo.branchHTML) {
+                        // when the first branch tree is uncollapsed cache all branch listings for this repo
+                        $.get(repo.branches_url.replace(/{.*}/,'')+self.token)
+                            .then(cacheBranches);
+                    }
+                    else
+                        writeBranches();
+
+                });
+    };
     User.prototype.init = function() {
         
         var self       = this;
@@ -153,4 +187,3 @@ User.prototype.display = function() {
 
 
 
-// http://localhost:3000/this.avatar
