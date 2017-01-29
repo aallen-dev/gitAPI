@@ -47,8 +47,8 @@ var Users = {} ,
         return format[formatter];
     } ,
     User =  function(name) {   
-
-        this.token = '?access_token=da91b62f9b9ec436a94c07fdfe8059532315d356';
+        // removed unauthorized token, this reduces access to 60 requests/hr
+        this.token = ''//'?access_token=da91b62f9b9ec436a94c07fdfe8059532315d356';
         this.templates = [];
         this.name = name;
     
