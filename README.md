@@ -1,6 +1,7 @@
 # gitAPI
 
-[GH-Pages](http://aallen-dev.github.io/gitAPI/) can't load the access token to GH, it gets automatically revoked.  
+[GH-Pages](http://aallen-dev.github.io/gitAPI/)  
+I can't load the access token to GH, it gets automatically revoked.  
 So this runs without authentication, meaning only 60 req/hr. 60 req gets exhausted *very* quickly with so little info
 returned on each request. Looking to host this elswhere soon, so check back.
 
